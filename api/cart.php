@@ -71,12 +71,13 @@ function addToCart($pdo, $input) {
         echo json_encode(['success' => true, 'message' => 'Product added to cart']);
         
     } catch (PDOException $e) {
+        error_log("Cart error: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Database error']);
     }
 }
 
 function updateCart($pdo, $input) {
-    $cart_id = $input['cart_id'];
+    $cart_id = $input['cart_id'] ?? $input['item_id'];
     $quantity = $input['quantity'];
     $user_id = $_SESSION['user_id'];
     
@@ -107,12 +108,13 @@ function updateCart($pdo, $input) {
         echo json_encode(['success' => true, 'message' => 'Cart updated']);
         
     } catch (PDOException $e) {
+        error_log("Cart update error: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Database error']);
     }
 }
 
 function removeFromCart($pdo, $input) {
-    $cart_id = $input['cart_id'];
+    $cart_id = $input['cart_id'] ?? $input['item_id'];
     $user_id = $_SESSION['user_id'];
     
     try {
@@ -122,6 +124,7 @@ function removeFromCart($pdo, $input) {
         echo json_encode(['success' => true, 'message' => 'Item removed from cart']);
         
     } catch (PDOException $e) {
+        error_log("Cart remove error: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Database error']);
     }
 }

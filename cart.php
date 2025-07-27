@@ -335,14 +335,16 @@ function formatPrice($amount) {
             
             if (quantity < 1) quantity = 1;
             
-            const formData = new FormData();
-            formData.append('action', 'update_quantity');
-            formData.append('item_id', itemId);
-            formData.append('quantity', quantity);
-            
             fetch('api/cart.php', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'update',
+                    item_id: itemId,
+                    quantity: quantity
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -363,13 +365,15 @@ function formatPrice($amount) {
                 return;
             }
             
-            const formData = new FormData();
-            formData.append('action', 'remove_item');
-            formData.append('item_id', itemId);
-            
             fetch('api/cart.php', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'remove',
+                    item_id: itemId
+                })
             })
             .then(response => response.json())
             .then(data => {

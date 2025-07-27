@@ -331,8 +331,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Add order items
         foreach ($cart_items as $item) {
-            $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$order_id, $item['product_id'], $item['quantity'], $item['price']]);
+            $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$order_id, $item['product_id'], $item['name'], $item['quantity'], $item['price']]);
             
             // Update product stock
             $stmt = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
@@ -341,7 +341,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Calculate and add affiliate commission if affiliate code was used
         if ($affiliate_code) {
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE referral_code = ?");
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE referral_code = ? AND affiliate_status = 'approved'");
             $stmt->execute([$affiliate_code]);
             $affiliate = $stmt->fetch();
             

@@ -74,11 +74,15 @@ function createTables($pdo) {
             address TEXT,
             city VARCHAR(50),
             state VARCHAR(50),
+            street_address TEXT,
             is_verified BOOLEAN DEFAULT 0,
             verification_token VARCHAR(100),
             affiliate_status ENUM('none', 'pending', 'approved', 'rejected') DEFAULT 'none',
             referral_code VARCHAR(20) UNIQUE,
             wallet_balance DECIMAL(10,2) DEFAULT 0,
+            bank_name VARCHAR(100),
+            account_number VARCHAR(20),
+            account_name VARCHAR(100),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )
@@ -90,6 +94,8 @@ function createTables($pdo) {
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
             description TEXT,
+            type VARCHAR(50),
+            size VARCHAR(20),
             price DECIMAL(10,2) NOT NULL,
             sale_price DECIMAL(10,2),
             category VARCHAR(50),
@@ -101,20 +107,39 @@ function createTables($pdo) {
         )
     ");
     
+    // Cart table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS cart (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            product_id INT NOT NULL,
+            quantity INT NOT NULL DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+        )
+    ");
+    
     // Orders table
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS orders (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT,
             order_number VARCHAR(20) UNIQUE NOT NULL,
+            subtotal DECIMAL(10,2) NOT NULL,
+            discount DECIMAL(10,2) DEFAULT 0,
+            shopping_credit DECIMAL(10,2) DEFAULT 0,
+            delivery_fee DECIMAL(10,2) NOT NULL,
+            interest_fee DECIMAL(10,2) DEFAULT 0,
             total DECIMAL(10,2) NOT NULL,
             status ENUM('pending_verification', 'processing', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending_verification',
             payment_method VARCHAR(50),
             payment_status ENUM('pending', 'paid', 'failed') DEFAULT 'pending',
-            shipping_address TEXT,
-            shipping_city VARCHAR(50),
-            shipping_state VARCHAR(50),
-            shipping_phone VARCHAR(20),
+            delivery_state VARCHAR(50),
+            delivery_city VARCHAR(50),
+            delivery_street_address TEXT,
+            notes TEXT,
+            payment_proof VARCHAR(255),
             affiliate_code VARCHAR(20),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -156,6 +181,7 @@ function createTables($pdo) {
         CREATE TABLE IF NOT EXISTS affiliate_clicks (
             id INT AUTO_INCREMENT PRIMARY KEY,
             referral_code VARCHAR(20) NOT NULL,
+            user_id INT,
             ip_address VARCHAR(45) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
@@ -165,14 +191,28 @@ function createTables($pdo) {
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS affiliate_commissions (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
+            affiliate_id INT NOT NULL,
             order_id INT,
-            amount DECIMAL(10,2) NOT NULL,
-            commission_type ENUM('click', 'sale') NOT NULL,
+            commission_amount DECIMAL(10,2) NOT NULL,
+            commission_type VARCHAR(50) NOT NULL,
+            description TEXT,
             status ENUM('pending', 'approved', 'paid') DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (affiliate_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL
+        )
+    ");
+    
+    // Settings table
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS settings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            setting_key VARCHAR(100) UNIQUE NOT NULL,
+            setting_value TEXT,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )
     ");
 }
