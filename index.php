@@ -30,11 +30,11 @@ if (isLoggedIn()) {
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/enhanced-style.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="images/melodiva-logo.png" alt="Melodiva Skin Care" height="50">Melodiva Skin Care
@@ -81,12 +81,12 @@ if (isLoggedIn()) {
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-primary me-2 px-3" href="auth/login.php" style="border-radius: 25px;">
+                            <a class="nav-link btn btn-outline-primary me-2 px-3 hover-lift" href="auth/login.php" style="border-radius: 25px;">
                                 <i class="fas fa-sign-in-alt"></i> Sign In
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary px-3" href="auth/register.php" style="border-radius: 25px; color: white;">
+                            <a class="nav-link btn btn-primary px-3 hover-lift" href="auth/register.php" style="border-radius: 25px; color: white;">
                                 <i class="fas fa-user-plus"></i> Sign Up
                             </a>
                         </li>
@@ -108,10 +108,10 @@ if (isLoggedIn()) {
                             Handcrafted with love for your skin's natural glow.
                         </p>
                         <div class="hero-buttons">
-                            <a href="shop.php" class="btn btn-light btn-lg me-3">
+                            <a href="shop.php" class="btn btn-light btn-lg me-3 hover-lift">
                                 <i class="fas fa-store"></i> Shop Now
                             </a>
-                            <a href="affiliate.php" class="btn btn-outline-light btn-lg">
+                            <a href="affiliate.php" class="btn btn-outline-light btn-lg hover-lift">
                                 <i class="fas fa-users"></i> Join Affiliate
                             </a>
                         </div>
@@ -119,7 +119,7 @@ if (isLoggedIn()) {
                 </div>
                 <div class="col-lg-6">
                     <div class="hero-image text-center">
-                        <img src="images/products.jpg?height=400&width=400" alt="Natural Skin Care Products" class="img-fluid rounded-circle" style="max-width: 400px;">
+                        <img src="images/products.jpg?height=400&width=400" alt="Natural Skin Care Products" class="img-fluid rounded-circle hover-scale" style="max-width: 400px;">
                     </div>
                 </div>
             </div>
@@ -150,11 +150,16 @@ if (isLoggedIn()) {
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="product-price"><?php echo formatPrice($product['price']); ?></span>
                                     <?php if (isLoggedIn()): ?>
-                                        <button class="btn btn-primary add-to-cart" data-product-id="<?php echo $product['id']; ?>">
-                                            <i class="fas fa-cart-plus"></i> Add to Cart
+                                        <button class="btn btn-primary btn-animated add-to-cart w-100" onclick="addToCartWithAnimation(<?php echo $product['id']; ?>)">
+                                            <span class="btn-text">
+                                                <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                            </span>
+                                            <div class="btn-loader">
+                                                <div class="spinner"></div>
+                                            </div>
                                         </button>
                                     <?php else: ?>
-                                        <button class="btn btn-outline-primary" onclick="promptLogin()">
+                                        <button class="btn btn-outline-primary w-100" onclick="promptLogin()">
                                             <i class="fas fa-cart-plus"></i> Add to Cart
                                         </button>
                                     <?php endif; ?>
@@ -166,7 +171,7 @@ if (isLoggedIn()) {
             </div>
             
             <div class="text-center mt-4">
-                <a href="shop.php" class="btn btn-primary btn-lg">
+                <a href="shop.php" class="btn btn-primary btn-lg hover-lift">
                     <i class="fas fa-store"></i> View All Products
                 </a>
             </div>
@@ -186,7 +191,7 @@ if (isLoggedIn()) {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="text-center">
                         <div class="mb-3">
-                            <i class="fas fa-leaf fa-3x text-primary"></i>
+                            <i class="fas fa-leaf fa-3x text-primary hover-scale"></i>
                         </div>
                         <h4>100% Natural</h4>
                         <p>All our products are made from natural ingredients with no harmful chemicals.</p>
@@ -196,7 +201,7 @@ if (isLoggedIn()) {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="text-center">
                         <div class="mb-3">
-                            <i class="fas fa-shipping-fast fa-3x text-primary"></i>
+                            <i class="fas fa-shipping-fast fa-3x text-primary hover-scale"></i>
                         </div>
                         <h4>Fast Delivery</h4>
                         <p>Quick and reliable delivery across Nigeria with tracking support.</p>
@@ -206,7 +211,7 @@ if (isLoggedIn()) {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="text-center">
                         <div class="mb-3">
-                            <i class="fas fa-users fa-3x text-primary"></i>
+                            <i class="fas fa-users fa-3x text-primary hover-scale"></i>
                         </div>
                         <h4>Affiliate Program</h4>
                         <p>Earn money by promoting our products with our generous affiliate program.</p>
@@ -228,14 +233,14 @@ if (isLoggedIn()) {
                     <div class="row mt-4">
                         <div class="col-6">
                             <div class="text-center">
-                                <i class="fas fa-award fa-2x text-primary mb-2"></i>
+                                <i class="fas fa-award fa-2x text-primary mb-2 hover-scale"></i>
                                 <h6>Premium Quality</h6>
                                 <small class="text-muted">Handcrafted with care</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="text-center">
-                                <i class="fas fa-heart fa-2x text-primary mb-2"></i>
+                                <i class="fas fa-heart fa-2x text-primary mb-2 hover-scale"></i>
                                 <h6>Customer Love</h6>
                                 <small class="text-muted">Trusted by many</small>
                             </div>
@@ -244,7 +249,7 @@ if (isLoggedIn()) {
                 </div>
                 <div class="col-lg-6">
                     <div class="text-center">
-                        <img src="images/logo-bold.jpg?height=400&width=500" alt="About Melodiva" class="img-fluid rounded shadow">
+                        <img src="images/logo-bold.jpg?height=400&width=500" alt="About Melodiva" class="img-fluid rounded shadow hover-scale">
                     </div>
                 </div>
             </div>
@@ -309,7 +314,7 @@ if (isLoggedIn()) {
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/enhanced-main.js"></script>
     <script>
         function promptLogin() {
             if (confirm('You need to sign in to add items to cart. Would you like to sign in now?')) {

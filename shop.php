@@ -60,11 +60,11 @@ if (isLoggedIn()) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="assets/css/enhanced-style.css" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation (same as index.php) -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
                 <img src="images/melodiva-logo.png" alt="Melodiva Skin Care" height="50">Melodiva Skin Care
@@ -210,8 +210,13 @@ if (isLoggedIn()) {
                                                 </div>
                                             </div>
                                             
-                                            <button class="btn btn-primary w-100 add-to-cart" data-product-id="<?php echo $product['id']; ?>">
-                                                <i class="fas fa-cart-plus"></i> Add to Cart
+                                            <button class="btn btn-primary btn-animated w-100 add-to-cart" onclick="addToCartWithAnimation(<?php echo $product['id']; ?>)">
+                                                <span class="btn-text">
+                                                    <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                                                </span>
+                                                <div class="btn-loader">
+                                                    <div class="spinner"></div>
+                                                </div>
                                             </button>
                                         <?php else: ?>
                                             <button class="btn btn-secondary w-100" disabled>
@@ -219,7 +224,7 @@ if (isLoggedIn()) {
                                             </button>
                                         <?php endif; ?>
                                     <?php else: ?>
-                                        <a href="auth/login.php" class="btn btn-outline-primary w-100">
+                                        <a href="auth/login.php" class="btn btn-outline-primary w-100 hover-lift">
                                             <i class="fas fa-sign-in-alt"></i> Login to Purchase
                                         </a>
                                     <?php endif; ?>
@@ -288,6 +293,6 @@ if (isLoggedIn()) {
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/enhanced-main.js"></script>
 </body>
 </html>
